@@ -377,11 +377,13 @@ public class SimulatorServer extends Thread
                     int angle = player.getGame().getWindDirection();
 
                     //make relative to the boat
-                    angle = ((player.getDirection() - angle) + 360 ) % 360;
+                    //angle = ((player.getDirection() - angle) + 360 ) % 360;
                     
                     //invert the angle by 180 degrees
-                    angle = (angle + 180) % 360;
-
+                    //angle = (angle + 180) % 360;
+                    
+                    angle = angle - 90;
+                    if(angle < 0) angle = 360 + angle;
                     
                     return new Integer(angle).toString();
                 }
