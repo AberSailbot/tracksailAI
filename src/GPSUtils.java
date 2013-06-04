@@ -184,6 +184,12 @@ public class GPSUtils
     }
 
 
+    /**
+    Converts a latitude and longitude back into and x and y co-ordinate
+    @param lat - the latitude in degrees
+    @param lon - the longitude in degrees
+    @return a 2 element array with the x and y co-ordinate associated with the specified latitude and longitude
+    */
     public static double[] latLonToXY(double lat,double lon)
     {
         double x=0,y=0;
