@@ -1,9 +1,7 @@
 public class GPSUtils
 {
-
-    public static final double BASE_LAT = 52.4;
-    public static final double BASE_LON = -4.1;
-
+    public static final double BASE_LAT = 52.41194851276237;
+    public static final double BASE_LON = -4.093008041381836;
     /**
     calculates a position given the current position, a bearing (in degrees) and a distance (in km)
     @param bearing - the bearing from the current position in degrees

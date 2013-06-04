@@ -1,7 +1,11 @@
 
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.RemoteException;
-import java.io.*;
 
 public class SimulatorServer extends Thread
 {
@@ -56,7 +60,7 @@ public class SimulatorServer extends Thread
 
     public class ClientThread extends Thread
     {
-        DataInputStream fromClient;
+        BufferedReader fromClient;
         DataOutputStream toClient;
 
         public ClientThread(Socket socket) 
@@ -64,7 +68,8 @@ public class SimulatorServer extends Thread
 
             try
             {
-                fromClient = new DataInputStream(socket.getInputStream());
+                fromClient = new BufferedReader(new InputStreamReader(
+    					socket.getInputStream()));
                 toClient = new DataOutputStream(socket.getOutputStream());
             }
             catch (IOException e)
@@ -83,25 +88,38 @@ public class SimulatorServer extends Thread
                 while (true)
                 {
                     //read some data from the client
-                    byte buf [] = new byte[255];
-                    int nbytes = fromClient.read(buf);
-                    String data = new String(buf);
+                    //byte buf [] = new byte[255];
+                    //int nbytes = fromClient.read(buf);
+                    
+                    String data = fromClient.readLine();
                     data = data.trim();
+                    System.out.println("Received : " + data + "<END>");
                     response = processInput(data);
                     //add C style termination to it
                     
-                    //terminate the string properly
-                    byte sendBuf [] = response.getBytes();
-                    byte sendBufTerm [] = new byte[sendBuf.length+1];
                     
-                    for (int i=0;i<sendBuf.length;i++)
-                    {
-                        sendBufTerm[i] = sendBuf[i];    
+                    System.out.println("Sending response : " + response);
+                    
+                    //Our code doesn't want confirmations (Kamil)
+                    if(!response.equals("OK") && !response.contains("ERROR")){
+                    
+	                    //terminate the string properly
+	                    byte sendBuf [] = response.getBytes();
+	                    byte sendBufTerm [] = new byte[sendBuf.length+1];
+	                    
+	                    for (int i=0;i<sendBuf.length;i++)
+	                    {
+	                        sendBufTerm[i] = sendBuf[i];    
+	                    }
+	                    
+	                    sendBufTerm[sendBufTerm.length-1] = '\n';
+	                    
+	                    
+	                    toClient.write(sendBufTerm,0,sendBufTerm.length);
+	                    //toClient.writeChars(response + "\n");
+	                    toClient.flush();
+                    
                     }
-                    
-                    
-                    toClient.write(sendBufTerm,0,sendBufTerm.length);
-                    toClient.flush();
                 }
 
                 /*
@@ -153,14 +171,33 @@ public class SimulatorServer extends Thread
                     int whichWp=Integer.parseInt(params);
                     player.getGame().gotoNextWp(player);
                     return "OK";
-                }
+                }else if(command.equals("waypointnorthing")){
+                	return "OK";
+                }else if(command.equals("waypointeasting")){
+            		return "OK";
+            	}else if(command.equals("waypointnum")){
+        			return "OK";
+        		}else if(command.equals("waypointdistance")){
+        			return "OK";
+        		}
+            	else if(command.equals("waypointheading")){
+        			return "OK";
+        		}
                 //rudder centres around 0, full left is at 270 and full right is at 90
                 else if (command.equalsIgnoreCase("rudder"))
                 {
-
+                	System.out.println("DETECTED");
                     int angle=Integer.parseInt(params);
-                    if (angle>=0&angle<=360)
+                    
+                    if (angle>=90 && angle<=270) //our range
                     {
+                    	//Translating our rudder values to simulator (Kamil)
+                    	if(angle >= 90 && angle <= 180){
+                    		angle = 90 + (90 - angle);
+                    	}else{
+                    		angle = 270 + (270 - angle);
+                    	}
+                    	System.out.println("Setting rudder angle to " + angle);
                        rudderAngle=angle;
                     }
                       else
@@ -340,11 +377,13 @@ public class SimulatorServer extends Thread
                     int angle = player.getGame().getWindDirection();
 
                     //make relative to the boat
-                    angle = ((player.getDirection() - angle) + 360 ) % 360;
+                    //angle = ((player.getDirection() - angle) + 360 ) % 360;
                     
                     //invert the angle by 180 degrees
-                    angle = (angle + 180) % 360;
-
+                    //angle = (angle + 180) % 360;
+                    
+                    angle = angle - 90;
+                    if(angle < 0) angle = 360 + angle;
                     
                     return new Integer(angle).toString();
                 }
