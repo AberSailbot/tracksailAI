@@ -116,7 +116,6 @@ public class SimulatorServer extends Thread
 	                    
 	                    
 	                    toClient.write(sendBufTerm,0,sendBufTerm.length);
-	                    //toClient.writeChars(response + "\n");
 	                    toClient.flush();
                     
                     }

@@ -89,7 +89,7 @@ public class Track implements Serializable
 	 *
 	 * @param num how many gates to reserve memory for
 	 */
-	public void initPorts (int num) { ports = new Port[num]; }
+	public void initPorts (int num) { ports = new Port[99]; }
 
 	/**
 	 * Adds a gate.
