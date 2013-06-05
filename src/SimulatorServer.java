@@ -481,13 +481,25 @@ public class SimulatorServer extends Thread
                 else if (command.equalsIgnoreCase("northing"))
                 {
                     double pos[] = GPSUtils.xYToLatLon(player.getPosition().getX(),player.getPosition().getY());
+                    double reverse[] = GPSUtils.latLonToXY(pos[0],pos[1]); 
+                    System.out.println("original: " + player.getPosition().getX() + "," + player.getPosition().getY() + " reverse translation = " + reverse[0] + "," + reverse[1]);
                     return new Double(pos[0]).toString();
                     
                 }
                 else if (command.equalsIgnoreCase("easting"))
                 {
                     double pos[] = GPSUtils.xYToLatLon(player.getPosition().getX(),player.getPosition().getY());
+                    double reverse[] = GPSUtils.latLonToXY(pos[0],pos[1]); 
+                    System.out.println("original: " + player.getPosition().getX() + "," + player.getPosition().getY() + " reverse translation = " + reverse[0] + "," + reverse[1]);
                     return new Double(pos[1]).toString();
+                }
+                else if (command.equalsIgnoreCase("x"))
+                {
+                    return new Double(player.getPosition().getX()).toString();
+                }
+                else if (command.equalsIgnoreCase("y"))
+                {
+                    return new Double(player.getPosition().getY()).toString();
                 }
                 else
                 {
