@@ -212,138 +212,139 @@ public class SimulatorServer extends Thread
                     {          
                         //get desired sail direction in terms against the boat
                         int desired_direction = Integer.parseInt(params);
+                        System.out.println("Desired direction : " + desired_direction);
                                                
-                        //sail cannot be placed between 270 and 90 degrees
-                        if (desired_direction>90&&desired_direction<=180)
-                        {
-                            desired_direction=90;
-                        }
-                        if (desired_direction>180&&desired_direction<270)
-                        {
-                            desired_direction=270;
-                        }
+//                        //sail cannot be placed between 270 and 90 degrees
+//                        if (desired_direction>90&&desired_direction<=180)
+//                        {
+//                            desired_direction=90;
+//                        }
+//                        if (desired_direction>180&&desired_direction<270)
+//                        {
+//                            desired_direction=270;
+//                        }
+//                        
+//                        //change coords to normal boat like ones, from robot like ones
+//                        //on the robot sail angle taken at front of sail, not rear
+//                        //valid angles are 0-90 and 270-360 not 90-270.
+//                        //90 means the same, 135 means 45, 180 means 0
+//                        //270 means the same, 225 means 315, 180 means 360
+//                        if (desired_direction<180)
+//                        {
+//                            desired_direction = 180 - desired_direction;
+//                        }
+//                        else
+//                        {
+//                            desired_direction = (360 - desired_direction) + 180;
+//                        }
+//                        
+//                        desired_direction = 360 - desired_direction; 
+//                        
+//                        //invert angle (180 becomes 0, vice versa) to meet tracksail method
+//                        desired_direction = convertCoords(desired_direction);
+//                        
+//                        //System.out.println("desired_direction = " + desired_direction);
+//                        
+//                        desired_direction = ((360 + desired_direction) - 90) % 360;
+//                        
+//                        //System.out.println("modified desired_direction = " + desired_direction);
+//                        
+//
+//                        
+//                        int wind_dir = player.getGame().getWindDirection();
+//                        
+//                        int boat_dir = player.getDirection();
+//                        
+//                        //equivalent to sail_dir code in player.java
+//                        //this is the maximum angle the sail may reach
+//                        int sail_dir = (wind_dir-boat_dir+360)%360;
+//                        
+//                        // Change the scale 0..100 % => 0...90 degrees.
+//                        int restrict_angle = 90;
+//                        int new_sail_dir=sail_dir;
+//                        // The sail may swing between k1 ... k2 against the direction of
+//                        // the boat.
+//                        /*int k1 = (180 - restrict_angle+360)%360;
+//                        int k2 = (180 + restrict_angle)%360;*/
+//                        int k1 = 90;
+//                        int k2 = 270;
+//                        
+//                        
+//
+//                        
+//                        if( sail_dir < k1 ) 
+//                        {
+//                            new_sail_dir = k1;
+//                        }
+//                        
+//                        if( sail_dir > k2 ) 
+//                        {
+//                            new_sail_dir = k2;
+//                        }
+//                        
+//                        int max=new_sail_dir;
+//                        
+//
+//
+//                        restrict_angle = 0;
+//                        new_sail_dir = sail_dir;
+//                        k1 = (180 - restrict_angle+360)%360;
+//                        k2 = (180 + restrict_angle)%360;
+//                        if( sail_dir < k1 ) 
+//                        {
+//                            new_sail_dir = k1;
+//                        }
+//                        
+//                        if( sail_dir > k2 ) 
+//                        {
+//                            new_sail_dir = k2;
+//                        }
+//                        
+//                        int min=new_sail_dir;
+//                        
+//          
+//                        
+//                        //swap if order is wrong
+//                        if (min>max)
+//                        {
+//                            /*int temp = min;
+//                            min = max;
+//                            max = temp;
+//                            System.out.println("Swapping min and max");*/
+//                            if (desired_direction<=max)
+//                            {
+//                                desired_direction=max;
+//                            }
+//                            if (desired_direction>=min)
+//                            {
+//                                desired_direction=min;
+//                            }   
+//                        }
+//                        else
+//                        {        
+//                            //is our angle outside this range?
+//                            if (desired_direction<=min)
+//                            {
+//                                desired_direction=min;
+//                            }
+//                            if (desired_direction>=max)
+//                            {
+//                                desired_direction=max;
+//                            }
+//                        }
                         
-                        //change coords to normal boat like ones, from robot like ones
-                        //on the robot sail angle taken at front of sail, not rear
-                        //valid angles are 0-90 and 270-360 not 90-270.
-                        //90 means the same, 135 means 45, 180 means 0
-                        //270 means the same, 225 means 315, 180 means 360
-                        if (desired_direction<180)
-                        {
-                            desired_direction = 180 - desired_direction;
-                        }
-                        else
-                        {
-                            desired_direction = (360 - desired_direction) + 180;
-                        }
-                        
-                        desired_direction = 360 - desired_direction; 
-                        
-                        //invert angle (180 becomes 0, vice versa) to meet tracksail method
-                        desired_direction = convertCoords(desired_direction);
-                        
-                        //System.out.println("desired_direction = " + desired_direction);
-                        
-                        desired_direction = ((360 + desired_direction) - 90) % 360;
-                        
-                        //System.out.println("modified desired_direction = " + desired_direction);
-                        
+//                        //now figure out where in the range it lies
+//                        //scale to 0-100
+//                        int range = max-min;
 
                         
-                        int wind_dir = player.getGame().getWindDirection();
-                        
-                        int boat_dir = player.getDirection();
-                        
-                        //equivalent to sail_dir code in player.java
-                        //this is the maximum angle the sail may reach
-                        int sail_dir = (wind_dir-boat_dir+360)%360;
-                        
-                        // Change the scale 0..100 % => 0...90 degrees.
-                        int restrict_angle = 90;
-                        int new_sail_dir=sail_dir;
-                        // The sail may swing between k1 ... k2 against the direction of
-                        // the boat.
-                        /*int k1 = (180 - restrict_angle+360)%360;
-                        int k2 = (180 + restrict_angle)%360;*/
-                        int k1 = 90;
-                        int k2 = 270;
-                        
-                        
+                        //float angle = desired_direction - min;
 
                         
-                        if( sail_dir < k1 ) 
-                        {
-                            new_sail_dir = k1;
-                        }
-                        
-                        if( sail_dir > k2 ) 
-                        {
-                            new_sail_dir = k2;
-                        }
-                        
-                        int max=new_sail_dir;
-                        
-
-
-                        restrict_angle = 0;
-                        new_sail_dir = sail_dir;
-                        k1 = (180 - restrict_angle+360)%360;
-                        k2 = (180 + restrict_angle)%360;
-                        if( sail_dir < k1 ) 
-                        {
-                            new_sail_dir = k1;
-                        }
-                        
-                        if( sail_dir > k2 ) 
-                        {
-                            new_sail_dir = k2;
-                        }
-                        
-                        int min=new_sail_dir;
-                        
-          
-                        
-                        //swap if order is wrong
-                        if (min>max)
-                        {
-                            /*int temp = min;
-                            min = max;
-                            max = temp;
-                            System.out.println("Swapping min and max");*/
-                            if (desired_direction<=max)
-                            {
-                                desired_direction=max;
-                            }
-                            if (desired_direction>=min)
-                            {
-                                desired_direction=min;
-                            }   
-                        }
-                        else
-                        {        
-                            //is our angle outside this range?
-                            if (desired_direction<=min)
-                            {
-                                desired_direction=min;
-                            }
-                            if (desired_direction>=max)
-                            {
-                                desired_direction=max;
-                            }
-                        }
-                        
-                        //now figure out where in the range it lies
-                        //scale to 0-100
-                        int range = max-min;
-
-                        
-                        float angle = desired_direction - min;
-
-                        
-                        angle = (float) angle / (float) range;                      
+                        float angle = (float) desired_direction / 90;                      
                         angle = angle * 100;
                         
-
+                        System.out.println("Setting angle to " + angle);
                         
                         //server uses values between 0 and 100 to represent the sail
                         ts_server.setSail(playerNumber,(int)angle);   

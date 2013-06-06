@@ -1,6 +1,9 @@
-import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 /**
  * Class <code>TrackFileParser</code> reads and parses a track file
@@ -17,6 +20,37 @@ import java.util.*;
  */
 public class TrackFileParser
 {
+	
+	private class GPSCoordinate{
+		private double lat;
+		private double lon;
+		
+		public GPSCoordinate(double lat, double lon){
+			super();
+			this.lat = lat;
+			this.lon = lon;
+		}
+
+		public double getLat(){
+			return lat;
+		}
+
+		public void setLat(double lat){
+			this.lat = lat;
+		}
+
+		public double getLon(){
+			return lon;
+		}
+
+		public void setLon(double lon){
+			this.lon = lon;
+		}
+		
+		
+		
+	}
+	
 	/** Default constructor. */
 	public TrackFileParser() {	}
 
@@ -49,6 +83,52 @@ public class TrackFileParser
 		return lines;
 	}
 
+	/**
+	 * Creates track from waypoint file, the same as used for SailbotManager and SailbotLogic
+	 * @param wpFileName
+	 * @return
+	 */
+	public Track parseFromWaypointFile(String wpFileName){
+		Track track = new Track();
+		
+		LinkedList<GPSCoordinate> points = new LinkedList<TrackFileParser.GPSCoordinate>(); 
+		try{
+			BufferedReader reader = new BufferedReader(new FileReader(new File(wpFileName)));
+			String line;
+			while((line = reader.readLine())!=null){
+				String[] latlon = line.split(";");
+				points.add(new GPSCoordinate(new Double(latlon[0]), new Double(latlon[1])));
+			}
+			reader.close();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+		track.initPorts(points.size());
+		
+		int i = 0;
+		for(GPSCoordinate c : points){
+			double[] p = GPSUtils.latLonToXY(c.getLat(), c.getLon());
+			Vector2 v1 = new Vector2((int)p[0], (int)p[1]);
+			Vector2 v2 = new Vector2((int)p[0], (int)p[1]+1);
+			track.addPort(i, v1, v2);
+			//System.out.println("Added Port " + i + ", x:" + v.x + " y:" + v.y);
+			i++;
+		}
+		
+		track.setNumberOfLaps(1);
+		track.setName("Waypoints");
+		track.setMinWindDirection(0);
+		track.setMaxWindDirection(0);
+		track.setMinWindVelocity(7);
+		track.setMaxWindVelocity(7);
+		track.setWindChangeInterval(1);
+		track.setMaxGameDuration(999999);
+		
+		
+		return track;
+	}
+	
 	/**
 	 * The actual creation of a <code>Track</code> object.
 	 *
@@ -142,6 +222,8 @@ public class TrackFileParser
 							sb_y = Integer.parseInt ( st.nextToken ());
 							track.addPort ( port_no, new Vector2(pb_x,pb_y),
 									new Vector2(sb_x,sb_y) );
+							System.out.println("Added Port " + port_no + ", x:" + pb_x + " y:" + pb_y);
+							System.out.println("Added Port " + port_no + ", x:" + sb_x + " y:" + sb_y);
 							port_no++ ;
 							continue;
 						}
