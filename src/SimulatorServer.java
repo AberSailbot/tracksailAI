@@ -344,6 +344,11 @@ public class SimulatorServer extends Thread
                         float angle = (float) desired_direction / 90;                      
                         angle = angle * 100;
                         
+                        //On the boat 0 is sail full out.
+                        //It should really be the other way round,
+                        //but so far that's a quick fix.
+                        angle = 100 - angle;
+                        
                         System.out.println("Setting angle to " + angle);
                         
                         //server uses values between 0 and 100 to represent the sail

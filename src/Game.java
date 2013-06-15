@@ -375,7 +375,7 @@ public class Game implements Runnable, Serializable{
 		server = s;
 
 		// We need a track, so load the default one
-		loadTrack("../tracks/box_wps.txt");
+		loadTrack("../tracks/waypoints_test.txt");
 		//loadTrack("../tracks/default.track");
 		
 		clearRaceResult();
