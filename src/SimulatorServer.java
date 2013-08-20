@@ -340,7 +340,8 @@ public class SimulatorServer extends Thread
                         
                         //float angle = desired_direction - min;
 
-                        
+                        //Basically changing degrees to percent.
+                        //And sail fully in is 90 degrees.
                         float angle = (float) desired_direction / 90;                      
                         angle = angle * 100;
                         
@@ -390,7 +391,7 @@ public class SimulatorServer extends Thread
                     angle = angle - 90;
                     if(angle < 0) angle = 360 + angle;
                     
-                    return new Integer(angle).toString();
+                    return "set wind_dir " + angle;
                 }
                 else if (command.equalsIgnoreCase("compass"))
                 {
@@ -400,7 +401,7 @@ public class SimulatorServer extends Thread
 
                     angle = convertCoords(angle);                 
                     //needs to convert from tracksail angles
-                    return new Integer(angle).toString();
+                    return "set compass " + angle;
                 }
                 else if (command.equalsIgnoreCase("waypointdir"))
                 {
@@ -414,7 +415,7 @@ public class SimulatorServer extends Thread
                     tgt.normalize();
                     int angle = (int)Math.toDegrees(tgt.getDirection());
                     angle = convertCoords(angle);
-                    return new Integer(angle).toString();
+                    return "set waypointdir " + angle;
                 }
                 else if (command.equalsIgnoreCase("waypointnum"))
                 {
@@ -489,7 +490,7 @@ public class SimulatorServer extends Thread
                     double pos[] = GPSUtils.xYToLatLon(player.getPosition().getX(),player.getPosition().getY());
                     double reverse[] = GPSUtils.latLonToXY(pos[0],pos[1]); 
                     System.out.println("original: " + player.getPosition().getX() + "," + player.getPosition().getY() + " reverse translation = " + reverse[0] + "," + reverse[1]);
-                    return new Double(pos[0]).toString();
+                    return "set northing " + pos[0];
                     
                 }
                 else if (command.equalsIgnoreCase("easting"))
@@ -497,7 +498,7 @@ public class SimulatorServer extends Thread
                     double pos[] = GPSUtils.xYToLatLon(player.getPosition().getX(),player.getPosition().getY());
                     double reverse[] = GPSUtils.latLonToXY(pos[0],pos[1]); 
                     System.out.println("original: " + player.getPosition().getX() + "," + player.getPosition().getY() + " reverse translation = " + reverse[0] + "," + reverse[1]);
-                    return new Double(pos[1]).toString();
+                    return "set easting " + pos[1];
                 }
                 else if (command.equalsIgnoreCase("x"))
                 {
