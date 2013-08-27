@@ -375,8 +375,22 @@ public class SimulatorServer extends Thread
             }
             else if (type.equalsIgnoreCase("get"))
             {
+            	//If boat asks for waypoints
+            	if(command.equalsIgnoreCase("waypoints")){
+            		Track currentTrack = player.getGame().getTrack();
+            		StringBuilder message = new StringBuilder("set waypoints");
+        			for(int i = 0; i < currentTrack.getPortCount(); i++){
+        				Vector2 buoy = currentTrack.getPortPB(i);
+        				double[] wp = GPSUtils.xYToLatLon(buoy.x, buoy.y);
+        				message.append(" ")
+        					   .append(wp[0])
+        					   .append(";")
+        					   .append(wp[1]);
+        			}
 
-                if (command.equalsIgnoreCase("wind_dir"))
+                    return message.toString();
+            		
+            	}else if (command.equalsIgnoreCase("wind_dir"))
                 {
 
                     //needs to be relative to boat
